@@ -53,6 +53,7 @@ public class PowerMatterController {
         log.info("uuid={}, organId={}, organArea={}, list={}", uuid, organId, organArea, list);
         resultVo.setResult(list);
         resultVo.setSuccess(true);
+        resultVo.setResultDes("");
         return resultVo;
     }
 }
