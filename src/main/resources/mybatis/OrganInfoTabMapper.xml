@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhanghf.mapper.OrganInfoTabMapper">
+    <resultMap id="BaseResultMap" type="com.zhanghf.po.OrganInfoTab">
+        <result column="city_info" jdbcType="VARCHAR" property="cityInfo"/>
+        <result column="county_info" jdbcType="VARCHAR" property="countyInfo"/>
+        <result column="organ_name" jdbcType="VARCHAR" property="organName"/>
+        <result column="organ_id" jdbcType="VARCHAR" property="organId"/>
+        <result column="organ_area" jdbcType="VARCHAR" property="organArea"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+    city_info, county_info, organ_name, organ_id, organ_area
+  </sql>
+
+    <select id="organInfoList" parameterType="map" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from organ_info_tab t
+        where t.organ_id not in (select ouguid from ext_mat_tab)
+    </select>
+</mapper>

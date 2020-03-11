@@ -3,7 +3,7 @@ package com.zhanghf.po;
 import lombok.Data;
 
 @Data
-public class PowerMatterInfoTab {
+public class ExtMatTab {
     private String matname;
     private String servicecodeid;
     private String servicecode;

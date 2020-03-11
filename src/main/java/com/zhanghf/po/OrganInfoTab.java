@@ -8,5 +8,5 @@ public class OrganInfoTab {
     private String countyInfo;
     private String organName;
     private String organId;
-    private String organArea;
+    private String areaCode;
 }

@@ -1,7 +1,7 @@
 package com.zhanghf;
 
 import com.alibaba.fastjson.JSONObject;
-import com.zhanghf.util.HttpUtils;
+import com.zhanghf.util.HttpConnectionUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,7 +20,7 @@ public class AppTest {
         JSONObject params = new JSONObject();
         params.put("organId", "admin");
         //params.put("organArea", "330000");
-        Object data = HttpUtils.getHttpResponse("",url,params);
+        Object data = HttpConnectionUtils.httpConnectionPost("", url, params);
         System.out.println(data);
     }
 }
