@@ -7,5 +7,6 @@ public class ResultVo<T> {
     private T result;
     private boolean isSuccess = false;
     private String code;
+    private String requestId;
     private String resultDes;
 }
