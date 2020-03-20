@@ -1,18 +1,26 @@
 package com.zhanghf.util;
 
 import com.alibaba.fastjson.JSONObject;
-import com.zhanghf.dto.CommonDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
 
+/**
+ * @author zhanghf
+ * @version 1.0
+ * @date 10:09 2020/3/12
+ */
 @Slf4j
 public class HttpServletRequestUtils {
+
+    private HttpServletRequestUtils() {
+        throw new IllegalStateException("HttpServletRequestUtils");
+    }
 
     /**
      * 获取参数
@@ -25,33 +33,27 @@ public class HttpServletRequestUtils {
         String httpUrl = request.getRequestURL() + (StringUtils.isEmpty(request.getQueryString()) ? "" : ("?" + request.getQueryString()));
         JSONObject result = new JSONObject();
         String inputLine;
-        StringBuffer buffer = new StringBuffer();
-        BufferedReader bufferedReader = null;
-        try {
-            bufferedReader = new BufferedReader(new InputStreamReader(request.getInputStream(), CommonDTO.CHARSET_NAME));
+        StringBuilder buffer = new StringBuilder();
+        try (
+                InputStreamReader inputStreamReader = new InputStreamReader(request.getInputStream(), StandardCharsets.UTF_8);
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader)
+        ) {
             while ((inputLine = bufferedReader.readLine()) != null) {
                 buffer.append(inputLine);
             }
             String data = buffer.toString();
-            if (!StringUtils.isEmpty(data)) {
+            boolean flag = StringUtils.isEmpty(data);
+            if (!flag) {
                 result = JSONObject.parseObject(data);
             }
-            log.info("httpUrl={}, ip={}", httpUrl, getIpAddress(request));
             Enumeration<String> parameterNames = request.getParameterNames();
             while (parameterNames.hasMoreElements()) {
                 String paramName = parameterNames.nextElement();
                 result.put(paramName, request.getParameter(paramName));
             }
+            log.info("uuid={}, flag={}, method={}, condition={}", uuid, flag, request.getMethod(), result);
         } catch (Exception e) {
-            log.error("<getParameter.Exception>uuid={}, buffer={}, flag={}, errMsg={}", uuid, buffer, StringUtils.isEmpty(buffer.toString()), e.toString());
-        } finally {
-            try {
-                if (bufferedReader != null) {
-                    bufferedReader.close();
-                }
-            } catch (IOException e) {
-                log.error("<getParameter.IOException>uuid={}, errMsg={}", uuid, e.toString());
-            }
+            log.error("uuid={}, flag={}, errMsg={}", uuid, StringUtils.isEmpty(buffer.toString()), e.toString());
         }
         return result;
     }
