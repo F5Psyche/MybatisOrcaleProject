@@ -1,12 +1,30 @@
 package com.zhanghf.vo;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+/**
+ * @author zhanghf
+ * @version 1.0
+ * @date 10:11 2020/3/10
+ */
 @Data
+@NoArgsConstructor
 public class ResultVo<T> {
+
     private T result;
     private boolean isSuccess = false;
     private String code;
-    private String requestId;
     private String resultDes;
+    private String requestId;
+
+    public ResultVo(String requestId) {
+        this.requestId = requestId;
+    }
+
+    public ResultVo(String code, String resultDes, String requestId) {
+        this.code = code;
+        this.resultDes = resultDes;
+        this.requestId = requestId;
+    }
 }

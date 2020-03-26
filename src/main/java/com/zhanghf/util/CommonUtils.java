@@ -3,13 +3,13 @@ package com.zhanghf.util;
 import com.zhanghf.dto.CommonDTO;
 import com.zhanghf.vo.ResultVo;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.codec.binary.Base64;
 import org.springframework.util.StringUtils;
 
 import java.io.*;
 
 @Slf4j
 public class CommonUtils {
-
 
 
     /**
@@ -130,6 +130,17 @@ public class CommonUtils {
             }
         }
         return resultVo;
+    }
+
+    public static void downloadFile(String base64Code, File file) {
+        try (
+                FileOutputStream fos = new FileOutputStream(file)
+        ) {
+            byte[] bytes = Base64.decodeBase64(base64Code);
+            fos.write(bytes);
+        } catch (Exception e) {
+            log.error("errMsg={}", exceptionToString(e));
+        }
     }
 
 }
