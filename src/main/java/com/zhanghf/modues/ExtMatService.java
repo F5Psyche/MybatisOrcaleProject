@@ -3,8 +3,10 @@ package com.zhanghf.modues;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.zhanghf.annotation.CustomPermissionsService;
 import com.zhanghf.dto.CommonDTO;
 import com.zhanghf.dto.MatDicDTO;
+import com.zhanghf.enums.RoleEnum;
 import com.zhanghf.mapper.*;
 import com.zhanghf.po.*;
 import com.zhanghf.util.HttpConnectionUtils;
@@ -16,6 +18,10 @@ import org.springframework.util.CollectionUtils;
 import javax.annotation.Resource;
 import java.util.*;
 
+/**
+ * @author zhanghf
+ * @version 1.0
+ */
 @Slf4j
 @Service
 public class ExtMatService {
@@ -59,13 +65,15 @@ public class ExtMatService {
         return list;
     }
 
-    public List<OrganInfoTab> organInfoList(String uuid) {
+    @CustomPermissionsService(role = RoleEnum.ADMIN)
+    public Object organInfoList(String uuid) {
         Map<String, Object> map = new HashMap<>();
         List<OrganInfoTab> list = organInfoTabMapper.organInfoList(map);
         if (CollectionUtils.isEmpty(list)) {
             log.info("uuid={}, list={}", uuid, list);
             return Collections.emptyList();
         }
+        log.info("organInfoList.ss={}", "ss");
         return list;
     }
 

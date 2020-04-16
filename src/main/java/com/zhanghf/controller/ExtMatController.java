@@ -1,6 +1,8 @@
 package com.zhanghf.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.zhanghf.annotation.RoleNum;
+import com.zhanghf.enums.RoleEnum;
 import com.zhanghf.modues.ExtMatService;
 import com.zhanghf.po.ExtMatTab;
 import com.zhanghf.po.OrganInfoTab;
@@ -31,6 +33,7 @@ public class ExtMatController {
     ExtMatService extMatService;
 
     @RequestMapping("/organ")
+    @RoleNum(role = RoleEnum.ADMIN)
     public ResultVo organInfoList(HttpServletRequest request) {
         ResultVo resultVo = new ResultVo();
         String uuid = UUID.randomUUID().toString();
@@ -47,12 +50,14 @@ public class ExtMatController {
         String uuid = UUID.randomUUID().toString();
         ResultVo resultVo = new ResultVo();
         try {
-            List<OrganInfoTab> list = extMatService.organInfoList(uuid);
-            for (OrganInfoTab organInfoTab : list) {
-                resultVo = extMatService.matterSimpleQuery(uuid, organInfoTab);
-            }
+            //List<OrganInfoTab> list = extMatService.organInfoList(uuid);
+            Object object = extMatService.organInfoList(uuid);
+//            for (OrganInfoTab organInfoTab : list) {
+//                resultVo = extMatService.matterSimpleQuery(uuid, organInfoTab);
+//            }
+            log.info("object={}", object);
         } catch (Exception e) {
-            log.error("uuid={}, resultVo={}, request={}", uuid, resultVo, request);
+            log.error("uuid={}, resultVo={}, request={}, errMsg={}", uuid, resultVo, request, e.toString());
         }
         return resultVo;
     }

@@ -2,6 +2,12 @@ package com.zhanghf.dto;
 
 import org.apache.http.client.config.RequestConfig;
 
+import java.text.SimpleDateFormat;
+
+/**
+ * @author zhanghf
+ * @version 1.0
+ */
 public class CommonDTO {
     public static RequestConfig REQUEST_TIMEOUT_CONFIG = RequestConfig.custom().setSocketTimeout(30000).setConnectTimeout(30000)
             .setConnectionRequestTimeout(30000).build();
@@ -16,4 +22,8 @@ public class CommonDTO {
 
     public static final int COMMON_INDEX = 0;
     public static final String COMMON_KEY = "result";
+
+    public static SimpleDateFormat getDateFormat() {
+        return new SimpleDateFormat("HH:mm:ss");
+    }
 }
