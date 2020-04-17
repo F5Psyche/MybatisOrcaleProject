@@ -19,4 +19,8 @@ public class ImageInfo implements Serializable {
     private String imageUuid;
 
     private String imageBaseCode;
+
+    public ImageInfo(String imageUuid) {
+        this.imageUuid = imageUuid;
+    }
 }
