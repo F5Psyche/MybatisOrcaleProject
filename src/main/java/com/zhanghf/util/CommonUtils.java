@@ -1,16 +1,24 @@
 package com.zhanghf.util;
 
-import com.zhanghf.dto.CommonDTO;
 import com.zhanghf.vo.ResultVo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.util.StringUtils;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 
+/**
+ * @author zhanghf
+ * @version 1.0
+ * @date 10:09 2020/3/12
+ */
 @Slf4j
 public class CommonUtils {
 
+    private CommonUtils() {
+        throw new IllegalStateException("CommonUtils");
+    }
 
     /**
      * 将异常信息转换为字符串
@@ -19,18 +27,14 @@ public class CommonUtils {
      * @return 字符串
      */
     public static String exceptionToString(Exception e) {
-        PrintWriter pw = null;
-        try {
-            StringWriter sw = new StringWriter();
-            pw = new PrintWriter(sw);
+        try (
+                StringWriter sw = new StringWriter();
+                PrintWriter pw = new PrintWriter(sw)
+        ) {
             e.printStackTrace(pw);
             return sw.toString();
         } catch (Exception ex) {
             return "ExceptionToString is error";
-        } finally {
-            if (pw != null) {
-                pw.close();
-            }
         }
     }
 
@@ -46,12 +50,14 @@ public class CommonUtils {
         ResultVo<String> resultVo = new ResultVo<>();
         String pathName = "\\BlockChain\\" + fileName;
         File file = new File(pathName);
-        try {
-            if (!file.getParentFile().exists()) {
-                file.getParentFile().mkdirs();
-            }
-            OutputStream outputStream = new FileOutputStream(file);
-            byte bytes[] = content.getBytes();
+        if (!file.getParentFile().exists()) {
+            boolean flag = file.getParentFile().mkdirs();
+            log.info("uuid={}, flag={}", uuid, flag);
+        }
+        try (
+                OutputStream outputStream = new FileOutputStream(file)
+        ) {
+            byte[] bytes = content.getBytes();
             outputStream.write(bytes);
             resultVo.setSuccess(true);
         } catch (IOException e) {
@@ -97,12 +103,11 @@ public class CommonUtils {
      */
     public static ResultVo<String> inputStreamToString(String uuid, InputStream inputStream) {
         ResultVo<String> resultVo = new ResultVo<>();
-        InputStreamReader inputStreamReader = null;
-        BufferedReader bufferedReader = null;
-        StringBuffer buffer = new StringBuffer();
-        try {
-            inputStreamReader = new InputStreamReader(inputStream, CommonDTO.CHARSET_NAME);
-            bufferedReader = new BufferedReader(inputStreamReader);
+        StringBuilder buffer = new StringBuilder();
+        try (
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader)
+        ) {
             String lines;
             while ((lines = bufferedReader.readLine()) != null) {
                 buffer.append(lines);
@@ -114,20 +119,6 @@ public class CommonUtils {
             resultVo.setCode("8099");
             resultVo.setResultDes(e.toString());
             log.error("<inputStreamToString.Exception>uuid={}, errMsg={}", uuid, exceptionToString(e));
-        } finally {
-            try {
-                if (bufferedReader != null) {
-                    bufferedReader.close();
-                }
-                if (inputStreamReader != null) {
-                    inputStreamReader.close();
-                }
-            } catch (IOException e) {
-                resultVo.setResult("");
-                resultVo.setCode("8099");
-                resultVo.setResultDes(e.toString());
-                log.error("<inputStreamToString.IOException>uuid={}, errMsg={}", uuid, exceptionToString(e));
-            }
         }
         return resultVo;
     }
