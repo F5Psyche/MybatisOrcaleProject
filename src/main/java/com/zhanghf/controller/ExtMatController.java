@@ -2,16 +2,14 @@ package com.zhanghf.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.zhanghf.annotation.RoleNum;
+import com.zhanghf.enums.BusinessCodeEnum;
 import com.zhanghf.enums.RoleEnum;
 import com.zhanghf.modues.ExtMatService;
-import com.zhanghf.po.ExtMatTab;
-import com.zhanghf.po.OrganInfoTab;
+import com.zhanghf.po.OrganInfo;
 import com.zhanghf.util.HttpServletRequestUtils;
 import com.zhanghf.vo.ResultVo;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
@@ -38,7 +36,7 @@ public class ExtMatController {
         ResultVo resultVo = new ResultVo();
         String uuid = UUID.randomUUID().toString();
         JSONObject params = HttpServletRequestUtils.getParameter(uuid, request);
-        List<OrganInfoTab> list = extMatService.organInfoAll(uuid);
+        List<OrganInfo> list = extMatService.organInfoAll(uuid);
         resultVo.setResult(list);
         resultVo.setSuccess(true);
         resultVo.setResultDes("");
@@ -48,37 +46,42 @@ public class ExtMatController {
     @RequestMapping("/ext/matter")
     public ResultVo extMatInfoSave(HttpServletRequest request) {
         String uuid = UUID.randomUUID().toString();
-        ResultVo resultVo = new ResultVo();
+        ResultVo resultVo = new ResultVo(uuid);
         try {
-            //List<OrganInfoTab> list = extMatService.organInfoList(uuid);
-            Object object = extMatService.organInfoList(uuid);
-//            for (OrganInfoTab organInfoTab : list) {
-//                resultVo = extMatService.matterSimpleQuery(uuid, organInfoTab);
-//            }
-            log.info("object={}", object);
+            ResultVo<List<OrganInfo>> organInfoResult = extMatService.organInfoList(uuid);
+            if (organInfoResult.isSuccess()) {
+                List<OrganInfo> list = organInfoResult.getResult();
+                for (OrganInfo organInfo : list) {
+                    log.info("organInfo={}", organInfo);
+                }
+            } else {
+                resultVo = organInfoResult;
+            }
         } catch (Exception e) {
+            resultVo.setCode(BusinessCodeEnum.UNKNOWN_ERROR.getCode());
+            resultVo.setResultDes(BusinessCodeEnum.UNKNOWN_ERROR.getMsg());
             log.error("uuid={}, resultVo={}, request={}, errMsg={}", uuid, resultVo, request, e.toString());
         }
         return resultVo;
     }
 
-    @RequestMapping("/matterDetail/query")
-    public ResultVo matterDetailQuery(@RequestParam(value = "localInnerCode", required = false) String localInnerCode) {
-        String uuid = UUID.randomUUID().toString();
-        ResultVo resultVo = new ResultVo();
-        try {
-            if (StringUtils.isEmpty(localInnerCode)) {
-                List<ExtMatTab> list = extMatService.extMatAll(uuid);
-                for (ExtMatTab extMatTab : list) {
-                    resultVo = extMatService.matterDetailQuery(uuid, extMatTab.getLocalinnercode());
-                }
-            } else {
-                resultVo = extMatService.matterDetailQuery(uuid, localInnerCode);
-            }
-
-        } catch (Exception e) {
-            log.error("uuid={}, resultVo={}, localInnerCode={}", uuid, resultVo, localInnerCode);
-        }
-        return resultVo;
-    }
+//    @RequestMapping("/matterDetail/query")
+//    public ResultVo matterDetailQuery(@RequestParam(value = "localInnerCode", required = false) String localInnerCode) {
+//        String uuid = UUID.randomUUID().toString();
+//        ResultVo resultVo = new ResultVo();
+//        try {
+//            if (StringUtils.isEmpty(localInnerCode)) {
+//                List<ExtMatTab> list = extMatService.extMatAll(uuid);
+//                for (ExtMatTab extMatTab : list) {
+//                    resultVo = extMatService.matterDetailQuery(uuid, extMatTab.getLocalinnercode());
+//                }
+//            } else {
+//                resultVo = extMatService.matterDetailQuery(uuid, localInnerCode);
+//            }
+//
+//        } catch (Exception e) {
+//            log.error("uuid={}, resultVo={}, localInnerCode={}", uuid, resultVo, localInnerCode);
+//        }
+//        return resultVo;
+//    }
 }

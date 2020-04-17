@@ -1,6 +1,5 @@
 package com.zhanghf.controller;
 
-import com.zhanghf.vo.InnerMatterMaterialInfoVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,13 +17,6 @@ public class ImageController {
     public boolean imageGenerate(@RequestParam(value = "imageUuid", required = false) String imageUuid) {
 
 
-        return false;
-    }
-
-    @PostMapping("/annotation/test")
-    public boolean annotationTest(@RequestBody InnerMatterMaterialInfoVO vo) {
-
-        log.info("vo={}", vo);
         return false;
     }
 }

@@ -1,7 +1,11 @@
 package com.zhanghf.aop;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.zhanghf.annotation.CustomPermissionsService;
+import com.zhanghf.enums.BusinessCodeEnum;
 import com.zhanghf.util.HttpServletRequestUtils;
+import com.zhanghf.vo.ResultVo;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
@@ -16,7 +20,6 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
-import java.util.UUID;
 
 /**
  * Service层自定义注解拦截
@@ -42,33 +45,43 @@ public class CustomPermissionsServiceAop {
     /**
      * @param jointPoint 连接点,拦截点
      * @return jointPoint.proceed()放行, 执行业务逻辑;
-     * @throws Throwable
      */
     @Around("customPermissionsServicePointCut()")
-    public Object customPermissionsServiceAround(ProceedingJoinPoint jointPoint) throws Throwable {
+    public Object customPermissionsServiceAround(ProceedingJoinPoint jointPoint) {
+        Object[] objects = jointPoint.getArgs();
+        String uuid = objects[0].toString();
+        ResultVo resultVo = new ResultVo(uuid);
+        try {
+            JSONArray array = JSON.parseArray(JSON.toJSONString(objects));
+            log.info("array={}", array);
+            //获得当前访问的类(class)
+            Class<?> clazz = jointPoint.getTarget().getClass();
+            //获取目前方法的签名
+            Signature signature = jointPoint.getSignature();
+            //获得访问的方法名
+            String methodName = signature.getName();
+            //得到方法的参数的类型
+            Class[] argClass = ((MethodSignature) signature).getParameterTypes();
+            Method method = clazz.getDeclaredMethod(methodName, argClass);
+            log.info("uuid={}, clazz={}, signature={}, methodName={}, argClass={}, method={}", uuid, clazz, signature, methodName, argClass, method);
 
-        //获得当前访问的class
-        Class<?> clazz = jointPoint.getTarget().getClass();
-        //获得访问的方法名
-        Signature signature = jointPoint.getSignature();
-        String methodName = signature.getName();
-        //得到方法的参数的类型
-        Class[] argClass = ((MethodSignature) signature).getParameterTypes();
-        Method method = clazz.getDeclaredMethod(methodName, argClass);
-        CustomPermissionsService customPermissionsService = method.getAnnotation(CustomPermissionsService.class);
-        String role = customPermissionsService.role().getRole();
-        log.info("clazz={}, methodName={}, argClass={}, method={}, customPermissionsService={}, role={}", clazz, methodName, argClass, method, customPermissionsService, role);
+            CustomPermissionsService customPermissionsService = method.getAnnotation(CustomPermissionsService.class);
+            String role = customPermissionsService.role().getRole();
+            log.info("uuid={}, customPermissionsService={}, role={}", uuid, customPermissionsService, role);
 
-        //获取请求信息
-        ServletRequestAttributes servletRequestAttributes = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes());
-        if (servletRequestAttributes == null) {
-            return "没有获取到请求信息";
-        } else {
-            HttpServletRequest request = servletRequestAttributes.getRequest();
-            String uuid = UUID.randomUUID().toString();
-            log.info("uuid={}, params={}", uuid, HttpServletRequestUtils.getParameter(uuid, request));
+            //获取请求信息
+            ServletRequestAttributes servletRequestAttributes = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes());
+            if (servletRequestAttributes != null) {
+                //request.getInputStream()是获取InputStream对象,InputStream的read()方法内部有一个postion。读取完后想要再次读取需要reset。reset有条件,具体再百度进行学习
+                HttpServletRequest request = servletRequestAttributes.getRequest();
+                log.info("uuid={}, params={}", uuid, HttpServletRequestUtils.getParameter(uuid, request));
+            }
+            return jointPoint.proceed();
+        } catch (Throwable throwable) {
+            resultVo.setCode(BusinessCodeEnum.UNKNOWN_ERROR.getCode());
+            resultVo.setResultDes(BusinessCodeEnum.UNKNOWN_ERROR.getMsg());
+            log.error("uuid={}, errMsg={}", uuid, throwable.getMessage());
         }
-
-        return jointPoint.proceed();
+        return resultVo;
     }
 }
