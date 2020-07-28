@@ -23,6 +23,8 @@ public class CommonDTO {
     public static final int COMMON_INDEX = 0;
     public static final String COMMON_KEY = "result";
 
+    public static final Integer INITIAL_CAPACITY = 16;
+
     public static SimpleDateFormat getDateFormat() {
         return new SimpleDateFormat("HH:mm:ss");
     }
