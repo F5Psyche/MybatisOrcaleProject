@@ -20,6 +20,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 
 /**
  * Service层自定义注解拦截
@@ -48,6 +49,7 @@ public class CustomPermissionsServiceAop {
      */
     @Around("customPermissionsServicePointCut()")
     public Object customPermissionsServiceAround(ProceedingJoinPoint jointPoint) {
+        //获取方法的入参
         Object[] objects = jointPoint.getArgs();
         String uuid = objects[0].toString();
         ResultVo resultVo = new ResultVo(uuid);
@@ -60,11 +62,14 @@ public class CustomPermissionsServiceAop {
             Signature signature = jointPoint.getSignature();
             //获得访问的方法名
             String methodName = signature.getName();
+            MethodSignature methodSignature = (MethodSignature) signature;
             //得到方法的参数的类型
-            Class[] argClass = ((MethodSignature) signature).getParameterTypes();
+            Class[] argClass = methodSignature.getParameterTypes();
             Method method = clazz.getDeclaredMethod(methodName, argClass);
+            String[] parameterNames = methodSignature.getParameterNames();
+            Parameter[] parameters = method.getParameters();
             log.info("uuid={}, clazz={}, signature={}, methodName={}, argClass={}, method={}", uuid, clazz, signature, methodName, argClass, method);
-
+            log.info("uuid={}, parameterNames={}, parameters={}", uuid, parameterNames, parameters);
             CustomPermissionsService customPermissionsService = method.getAnnotation(CustomPermissionsService.class);
             String role = customPermissionsService.role().getRole();
             log.info("uuid={}, customPermissionsService={}, role={}", uuid, customPermissionsService, role);

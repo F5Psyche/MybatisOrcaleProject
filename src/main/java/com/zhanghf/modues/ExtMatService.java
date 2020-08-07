@@ -4,6 +4,7 @@ import com.zhanghf.annotation.CustomPermissionsService;
 import com.zhanghf.enums.BusinessCodeEnum;
 import com.zhanghf.enums.RoleEnum;
 import com.zhanghf.mapper.OrganInfoMapper;
+import com.zhanghf.po.ImageInfo;
 import com.zhanghf.po.OrganInfo;
 import com.zhanghf.vo.ResultVo;
 import lombok.extern.slf4j.Slf4j;
@@ -41,7 +42,7 @@ public class ExtMatService {
     }
 
     @CustomPermissionsService(role = RoleEnum.ADMIN)
-    public ResultVo<List<OrganInfo>> organInfoList(String uuid) {
+    public ResultVo<List<OrganInfo>> organInfoList(String uuid, ImageInfo imageInfo) {
         ResultVo<List<OrganInfo>> resultVo = new ResultVo<>(uuid);
         List<OrganInfo> list = organInfoMapper.organInfoList(new OrganInfo());
         if (CollectionUtils.isEmpty(list)) {

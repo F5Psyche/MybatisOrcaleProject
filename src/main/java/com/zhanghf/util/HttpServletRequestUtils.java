@@ -7,6 +7,7 @@ import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
@@ -37,7 +38,8 @@ public class HttpServletRequestUtils {
         String inputLine;
         StringBuilder buffer = new StringBuilder();
         try (
-                InputStreamReader inputStreamReader = new InputStreamReader(request.getInputStream(), StandardCharsets.UTF_8);
+                InputStream inputStream = request.getInputStream();
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
                 BufferedReader bufferedReader = new BufferedReader(inputStreamReader)
         ) {
             while ((inputLine = bufferedReader.readLine()) != null) {

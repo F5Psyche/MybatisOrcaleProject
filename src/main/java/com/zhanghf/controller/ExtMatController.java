@@ -5,6 +5,7 @@ import com.zhanghf.annotation.RoleNum;
 import com.zhanghf.enums.BusinessCodeEnum;
 import com.zhanghf.enums.RoleEnum;
 import com.zhanghf.modues.ExtMatService;
+import com.zhanghf.po.ImageInfo;
 import com.zhanghf.po.OrganInfo;
 import com.zhanghf.util.HttpServletRequestUtils;
 import com.zhanghf.vo.ResultVo;
@@ -48,7 +49,7 @@ public class ExtMatController {
         String uuid = UUID.randomUUID().toString();
         ResultVo resultVo = new ResultVo(uuid);
         try {
-            ResultVo<List<OrganInfo>> organInfoResult = extMatService.organInfoList(uuid);
+            ResultVo<List<OrganInfo>> organInfoResult = extMatService.organInfoList(uuid, new ImageInfo("imageSan"));
             if (organInfoResult.isSuccess()) {
                 List<OrganInfo> list = organInfoResult.getResult();
                 for (OrganInfo organInfo : list) {
