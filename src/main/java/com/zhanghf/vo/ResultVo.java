@@ -3,6 +3,8 @@ package com.zhanghf.vo;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 /**
  * @author zhanghf
  * @version 1.0
@@ -10,7 +12,7 @@ import lombok.NoArgsConstructor;
  */
 @Data
 @NoArgsConstructor
-public class ResultVo<T> {
+public class ResultVo<T> implements Serializable {
 
     private T result;
     private boolean isSuccess = false;

@@ -1,6 +1,8 @@
 package com.zhanghf.aop;
 
 import lombok.extern.slf4j.Slf4j;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -19,4 +21,10 @@ import org.springframework.stereotype.Component;
 @Order(1)
 @Component
 public class CustomPermissionsControllerAop {
+
+    @Around("@annotation(com.zhanghf.annotation.CustomPermissionsController)")
+    public Object CustomPermissionsControllerAround(ProceedingJoinPoint jointPoint) {
+        log.info("812={}, jointPoint={}", 812, jointPoint);
+        return null;
+    }
 }

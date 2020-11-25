@@ -1,16 +1,21 @@
 package com.zhanghf.controller;
 
 import com.zhanghf.dto.CommonDTO;
+import com.zhanghf.modues.ImageInfoService;
 import com.zhanghf.po.OrganInfo;
 import com.zhanghf.util.CommonUtils;
+import com.zhanghf.vo.ResultVo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -24,16 +29,20 @@ import java.util.UUID;
 @RequestMapping("")
 public class ImageController {
 
-    @PostMapping("/image/generate")
-    public boolean imageGenerate(@RequestParam(value = "imageUuid", required = false) String imageUuid) {
+    @Resource
+    ImageInfoService imageInfoService;
 
-        return false;
+    @PostMapping("/image/generate")
+    public ResultVo<List<String>> imageGenerate(@RequestParam(value = "imageUuid", required = false) String imageUuid) {
+        String uuid = UUID.randomUUID().toString();
+        return imageInfoService.imageGenerate(uuid, imageUuid);
     }
 
 
     @PostMapping("/body/test")
     public boolean bodyTest(@RequestBody OrganInfo organInfo) {
         log.info("organInfo={}", organInfo);
+        imageInfoService.bodyTest(organInfo);
         return false;
     }
 

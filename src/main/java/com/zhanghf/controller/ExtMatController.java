@@ -1,6 +1,7 @@
 package com.zhanghf.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.zhanghf.annotation.CustomPermissionsController;
 import com.zhanghf.annotation.RoleNum;
 import com.zhanghf.enums.BusinessCodeEnum;
 import com.zhanghf.enums.RoleEnum;
@@ -45,6 +46,7 @@ public class ExtMatController {
     }
 
     @RequestMapping("/ext/matter")
+    @CustomPermissionsController(role = RoleEnum.ADMIN)
     public ResultVo extMatInfoSave(HttpServletRequest request) {
         String uuid = UUID.randomUUID().toString();
         ResultVo resultVo = new ResultVo(uuid);
