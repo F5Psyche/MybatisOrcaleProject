@@ -32,6 +32,7 @@ public class ExtMatService {
      * @param uuid 唯一识别码
      * @return 机构信息的集合
      */
+    @CustomPermissionsService(role = RoleEnum.ADMIN)
     public List<OrganInfo> organInfoAll(String uuid) {
         List<OrganInfo> list = organInfoMapper.selectAll();
         if (CollectionUtils.isEmpty(list)) {

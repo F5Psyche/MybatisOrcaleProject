@@ -79,7 +79,7 @@ public class CustomPermissionsServiceAop {
             if (servletRequestAttributes != null) {
                 //request.getInputStream()是获取InputStream对象,InputStream的read()方法内部有一个postion。读取完后想要再次读取需要reset。reset有条件,具体再百度进行学习
                 HttpServletRequest request = servletRequestAttributes.getRequest();
-                log.info("uuid={}, params={}", uuid, HttpServletRequestUtils.getParameter(uuid, request));
+                log.info("uuid={}, params={}, ssToken={}", uuid, HttpServletRequestUtils.getParameter(uuid, request), request.getHeader("ssToken"));
             }
             return jointPoint.proceed();
         } catch (Throwable throwable) {
