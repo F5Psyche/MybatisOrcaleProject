@@ -25,6 +25,8 @@ public class CommonDTO {
 
     public static final Integer INITIAL_CAPACITY = 16;
 
+    public static final String COMMON_LOGGER_ERROR_INFO_PARAM = "uuid={}, errMsg={}";
+
     public static SimpleDateFormat getDateFormat() {
         return new SimpleDateFormat("HH:mm:ss");
     }

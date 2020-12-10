@@ -1,8 +1,9 @@
-package com.zhanghf.controller;
+package com.zhanghf.controller.custom;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.zhanghf.vo.ResultVo;
+import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,7 +20,8 @@ import java.util.UUID;
  */
 @Slf4j
 @RestController
-@RequestMapping("")
+@RequestMapping("custom")
+@Api(tags = "切面")
 public class CustomInterfaceController {
 
     @PostMapping("/get/resultVo")
@@ -32,4 +34,5 @@ public class CustomInterfaceController {
         resultVo.setCode(JSON.toJSONString(result));
         return resultVo;
     }
+
 }

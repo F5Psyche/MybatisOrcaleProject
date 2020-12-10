@@ -1,13 +1,13 @@
-package com.zhanghf.controller;
+package com.zhanghf.controller.image;
 
 import com.zhanghf.dto.CommonDTO;
 import com.zhanghf.modues.ImageInfoService;
 import com.zhanghf.po.OrganInfo;
 import com.zhanghf.util.CommonUtils;
 import com.zhanghf.vo.ResultVo;
+import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -27,6 +27,7 @@ import java.util.UUID;
 @Slf4j
 @RestController
 @RequestMapping("")
+@Api(tags = "图片")
 public class ImageController {
 
     @Resource

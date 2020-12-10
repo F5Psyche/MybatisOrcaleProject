@@ -149,7 +149,8 @@ public class HttpConnectionUtils {
             httpClient = HttpClients.createDefault();
             post.setConfig(CommonDTO.REQUEST_TIMEOUT_CONFIG);
             response = httpClient.execute(post);
-            status = response.getStatusLine().getStatusCode(); // http状态码
+            // http状态码
+            status = response.getStatusLine().getStatusCode();
             entity = response.getEntity();
             responseContent = EntityUtils.toString(entity, CommonDTO.CHARSET_NAME);
         } catch (Exception e) {
@@ -170,7 +171,7 @@ public class HttpConnectionUtils {
         }
         log.info("uuid={}, status={}, responseContent={}", uuid, status, responseContent);
         if (status != 200) {
-            return "httpSatus<" + status + ">请求错误";
+            return "httpStatus<" + status + ">请求错误";
         }
         return JSONObject.parse(responseContent);
     }

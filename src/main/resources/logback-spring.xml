@@ -86,6 +86,8 @@
     <logger name="org.springframework" level="error"/>
     <!-- org.apache 路径下的Class都使用error级别输出 -->
     <logger name="org.apache" level="error"/>
+    <!-- com.zhanghf.mapper 路径下的Class都使用debug级别输出 -->
+    <logger name="com.zhanghf.mapper" level="debug"/>
 
     <!-- 指定最基础的日志输出级别 -->
     <root level="info">
