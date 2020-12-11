@@ -2,7 +2,6 @@ package com.zhanghf.controller.session;
 
 import com.zhanghf.dto.CommonDTO;
 import com.zhanghf.util.CommonUtils;
-import com.zhanghf.vo.ResultVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -82,7 +81,7 @@ public class SessionCookieController {
                 response.addCookie(cookie);
             }
         } catch (IOException e) {
-            log.error("errMsg={}", CommonUtils.exceptionToString(e));
+            log.error("errMsg={}", CommonUtils.getStackTraceString(e));
         }
     }
 

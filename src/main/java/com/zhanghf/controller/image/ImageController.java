@@ -63,7 +63,7 @@ public class ImageController {
             String fileContentType = file.getContentType();
             log.info("uuid={}, nums={}, fileContentType={}", uuid, nums, fileContentType);
         } catch (IOException e) {
-            log.error("uuid={}, errMsg={}", uuid, CommonUtils.exceptionToString(e));
+            log.error("uuid={}, errMsg={}", uuid, CommonUtils.getStackTraceString(e));
         }
 
         return map;

@@ -81,7 +81,7 @@ public class ExportExcelUtils {
             hssfWorkbook.write(fileOutputStream);
             response.addHeader("content-disposition", "attachment;filename=" + URLEncoder.encode(fileName, CommonDTO.CHARSET_NAME));
         } catch (Exception e) {
-            log.error(CommonDTO.COMMON_LOGGER_ERROR_INFO_PARAM, uuid, CommonUtils.exceptionToString(e));
+            log.error(CommonDTO.COMMON_LOGGER_ERROR_INFO_PARAM, uuid, CommonUtils.getStackTraceString(e));
             resultVo.setResultDes(BusinessCodeEnum.UNKNOWN_ERROR.getMsg());
             resultVo.setCode(BusinessCodeEnum.UNKNOWN_ERROR.getCode());
             return resultVo;
@@ -97,7 +97,7 @@ public class ExportExcelUtils {
                 size = inputStream.read(b);
             }
         } catch (IOException e) {
-            log.error(CommonDTO.COMMON_LOGGER_ERROR_INFO_PARAM, uuid, CommonUtils.exceptionToString(e));
+            log.error(CommonDTO.COMMON_LOGGER_ERROR_INFO_PARAM, uuid, CommonUtils.getStackTraceString(e));
             resultVo.setResultDes(BusinessCodeEnum.UNKNOWN_ERROR.getMsg());
             resultVo.setCode(BusinessCodeEnum.UNKNOWN_ERROR.getCode());
             return resultVo;

@@ -40,7 +40,7 @@ public class SystemLoginController {
             info.setGmtInvalid(new Date(currentTime + 15 * 60 * 1000));
             String base64Code = Base64Utils.base64Code(JSON.toJSONString(info));
             info.setBaseCode(base64Code);
-            String ssoToken = EncryptUtils.MD5(JSON.toJSONString(info));
+            String ssoToken = EncryptUtils.md5(JSON.toJSONString(info));
             info.setSsoToken(ssoToken);
             if (systemLoginService.loginNotesInfoSave(info)) {
                 resultVo.setResult(ssoToken);

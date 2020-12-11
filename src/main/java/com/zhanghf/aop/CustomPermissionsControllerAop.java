@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 public class CustomPermissionsControllerAop {
 
     @Around("@annotation(com.zhanghf.annotation.CustomPermissionsController)")
-    public Object CustomPermissionsControllerAround(ProceedingJoinPoint jointPoint) {
+    public Object customPermissionsControllerAround(ProceedingJoinPoint jointPoint) {
         log.info("812={}, jointPoint={}", 812, jointPoint);
         return null;
     }

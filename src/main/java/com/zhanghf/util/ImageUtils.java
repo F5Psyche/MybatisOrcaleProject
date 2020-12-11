@@ -38,7 +38,7 @@ public class ImageUtils {
             byte[] bytes = byteArrayOutputStream.toByteArray();
             fileOutputStream.write(bytes);
         } catch (IOException e) {
-            log.error("uuid={}, errMsg={}", uuid, CommonUtils.exceptionToString(e));
+            log.error("uuid={}, errMsg={}", uuid, CommonUtils.getStackTraceString(e));
         }
 
     }
@@ -48,7 +48,7 @@ public class ImageUtils {
         try (FileOutputStream fileOutputStream = new FileOutputStream(file)) {
             fileOutputStream.write(bytes);
         } catch (Exception e) {
-            log.error("uuid={}, errMsg={}", uuid, CommonUtils.exceptionToString(e));
+            log.error("uuid={}, errMsg={}", uuid, CommonUtils.getStackTraceString(e));
         }
     }
 
@@ -64,13 +64,13 @@ public class ImageUtils {
                 try (FileOutputStream fileOutputStream = new FileOutputStream(file)) {
                     fileOutputStream.write(bytes);
                 } catch (Exception e) {
-                    log.error("uuid={}, errMsg={}", uuid, CommonUtils.exceptionToString(e));
+                    log.error("uuid={}, errMsg={}", uuid, CommonUtils.getStackTraceString(e));
                 }
 
                 try (FileInputStream fileInputStream = new FileInputStream(file)) {
                     return fileInputStream;
                 } catch (IOException e) {
-                    log.error("uuid={}, errMsg={}", uuid, CommonUtils.exceptionToString(e));
+                    log.error("uuid={}, errMsg={}", uuid, CommonUtils.getStackTraceString(e));
                 } finally {
                     if (file.exists()) {
                         file.delete();

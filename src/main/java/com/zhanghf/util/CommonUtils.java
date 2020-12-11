@@ -25,21 +25,23 @@ public class CommonUtils {
     }
 
     /**
-     * 将异常信息转换为字符串
+     * 将异常信息转换为字符串(不换行。如果要换行，将\t换成\n)
+     * e.toString() 获取异常名称
+     * stackTraceElements获取出现异常的行数、类名、方法名
      *
      * @param e 异常信息
      * @return 字符串
      */
-    public static String exceptionToString(Exception e) {
-        try (
-                StringWriter sw = new StringWriter();
-                PrintWriter pw = new PrintWriter(sw)
-        ) {
-            e.printStackTrace(pw);
-            return sw.toString();
-        } catch (Exception ex) {
-            return "ExceptionToString is error";
+    public static String getStackTraceString(Throwable e) {
+        StackTraceElement[] stackTraceElements = e.getStackTrace();
+        StringBuilder builder = new StringBuilder();
+        builder.append(e.toString());
+        if (stackTraceElements != null && stackTraceElements.length > 0) {
+            for (StackTraceElement stackTraceElement : stackTraceElements) {
+                builder.append("\t at ").append(stackTraceElement.toString());
+            }
         }
+        return builder.toString();
     }
 
     /**
@@ -68,7 +70,7 @@ public class CommonUtils {
             resultVo.setResult("");
             resultVo.setCode("8099");
             resultVo.setResultDes(e.toString());
-            log.error("<writeFile.IOException>uuid={}, errMsg={}", uuid, exceptionToString(e));
+            log.error("<writeFile.IOException>uuid={}, errMsg={}", uuid, getStackTraceString(e));
         }
         return resultVo;
     }
@@ -95,7 +97,7 @@ public class CommonUtils {
             resultVo.setSuccess(false);
             resultVo.setCode("8099");
             resultVo.setResultDes(e.toString());
-            log.error("<readFile.FileNotFoundException>uuid={}, errMsg={}", uuid, exceptionToString(e));
+            log.error("<readFile.FileNotFoundException>uuid={}, errMsg={}", uuid, getStackTraceString(e));
         }
         return resultVo;
     }
@@ -122,7 +124,7 @@ public class CommonUtils {
             resultVo.setResult("");
             resultVo.setCode("8099");
             resultVo.setResultDes(e.toString());
-            log.error("<inputStreamToString.Exception>uuid={}, errMsg={}", uuid, exceptionToString(e));
+            log.error("<inputStreamToString.Exception>uuid={}, errMsg={}", uuid, getStackTraceString(e));
         }
         return resultVo;
     }
@@ -152,7 +154,7 @@ public class CommonUtils {
             byte[] bytes = Base64.decodeBase64(base64Code);
             fos.write(bytes);
         } catch (Exception e) {
-            log.error("errMsg={}", exceptionToString(e));
+            log.error("errMsg={}", getStackTraceString(e));
         }
     }
 
@@ -165,7 +167,7 @@ public class CommonUtils {
      * @return 封装结果
      */
     public static <T> ResultVo<T> getExceptionResult(String uuid, Exception e) {
-        String errMsg = exceptionToString(e);
+        String errMsg = getStackTraceString(e);
         log.error(CommonDTO.COMMON_LOGGER_ERROR_INFO_PARAM, uuid, errMsg);
         return BusinessCodeEnum.getMsgCode(uuid, errMsg);
     }

@@ -21,14 +21,25 @@ import org.springframework.util.CollectionUtils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 加密工具类
+ *
+ * @author zhanghf
+ * @version 1.0
+ * @date 9:07 2020/3/11
+ */
 @Slf4j
 public class HttpConnectionUtils {
+
+    private HttpConnectionUtils() {
+        throw new IllegalStateException("HttpConnectionUtils");
+    }
 
     /**
      * @param uuid 唯一识别码
@@ -51,7 +62,7 @@ public class HttpConnectionUtils {
             connection.setRequestProperty(CommonDTO.HEADER_NAME, CommonDTO.HEADER_VALUE);
             connection.connect();
             OutputStream outputStream = connection.getOutputStream();
-            outputStream.write(json.toJSONString().getBytes(CommonDTO.CHARSET_NAME));
+            outputStream.write(json.toJSONString().getBytes(StandardCharsets.UTF_8));
             InputStream inputStream = connection.getInputStream();
             resultVo = CommonUtils.inputStreamToString(uuid, inputStream);
             status = connection.getResponseCode();
@@ -117,19 +128,14 @@ public class HttpConnectionUtils {
      */
     public static Object httpClientPost(String uuid, String httpUrl, Object object, JSONObject header) {
         HttpPost post = new HttpPost(httpUrl);
-        try {
-            post.setHeader(CommonDTO.HEADER_NAME, CommonDTO.HEADER_VALUE);
-            if (!CollectionUtils.isEmpty(header)) {
-                header.keySet().forEach(key -> {
-                    post.setHeader(key, header.getString(key));
-                });
-            }
-            byte[] bytes = object.toString().getBytes(CommonDTO.CHARSET_NAME);
-            post.setEntity(new ByteArrayEntity(bytes));
-        } catch (UnsupportedEncodingException e) {
-            log.error("uuid={}, errMsg={}", uuid, e.toString());
-            return e.toString();
+        post.setHeader(CommonDTO.HEADER_NAME, CommonDTO.HEADER_VALUE);
+        if (!CollectionUtils.isEmpty(header)) {
+            header.keySet().forEach(key -> {
+                post.setHeader(key, header.getString(key));
+            });
         }
+        byte[] bytes = object.toString().getBytes(StandardCharsets.UTF_8);
+        post.setEntity(new ByteArrayEntity(bytes));
         return httpPostUsing(uuid, post);
     }
 
@@ -139,40 +145,26 @@ public class HttpConnectionUtils {
      * @param post httpPost
      * @return 返回参数
      */
-    private static Object httpPostUsing(String uuid, HttpPost post) {
-        CloseableHttpClient httpClient = null;
-        CloseableHttpResponse response = null;
-        HttpEntity entity;
-        String responseContent;
-        int status;
-        try {
-            httpClient = HttpClients.createDefault();
-            post.setConfig(CommonDTO.REQUEST_TIMEOUT_CONFIG);
-            response = httpClient.execute(post);
+    private static String httpPostUsing(String uuid, HttpPost post) {
+        int statusOk = 200;
+        post.setConfig(CommonDTO.REQUEST_TIMEOUT_CONFIG);
+        try (
+                CloseableHttpClient httpClient = HttpClients.createDefault();
+                CloseableHttpResponse response = httpClient.execute(post)
+        ) {
             // http状态码
-            status = response.getStatusLine().getStatusCode();
-            entity = response.getEntity();
-            responseContent = EntityUtils.toString(entity, CommonDTO.CHARSET_NAME);
-        } catch (Exception e) {
-            log.error("uuid={}, errMsg={}", uuid, e.toString());
-            return e.toString();
-        } finally {
-            try {
-                if (response != null) {
-                    response.close();
-                }
-                if (httpClient != null) {
-                    httpClient.close();
-                }
-            } catch (Exception e) {
-                log.error("uuid={}, errMsg={}", uuid, e.toString());
-                return e.toString();
+            int status = response.getStatusLine().getStatusCode();
+            if (status != statusOk) {
+                log.error(CommonDTO.COMMON_LOGGER_ERROR_INFO_PARAM, uuid, "httpStatus<" + status + ">请求错误");
+                throw new IllegalArgumentException("httpPost请求异常");
             }
+            HttpEntity entity = response.getEntity();
+            String responseContent = EntityUtils.toString(entity, StandardCharsets.UTF_8);
+            log.info("uuid={}, status={}, responseContent={}", uuid, status, responseContent);
+            return responseContent;
+        } catch (Exception e) {
+            log.error(CommonDTO.COMMON_LOGGER_ERROR_INFO_PARAM, uuid, CommonUtils.getStackTraceString(e));
+            throw new IllegalArgumentException("httpPost请求异常");
         }
-        log.info("uuid={}, status={}, responseContent={}", uuid, status, responseContent);
-        if (status != 200) {
-            return "httpStatus<" + status + ">请求错误";
-        }
-        return JSONObject.parse(responseContent);
     }
 }
