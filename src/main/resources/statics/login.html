@@ -1,0 +1,97 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>title</title>
+<meta name="renderer" content="webkit">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+<meta name="generator" content=""  />
+<link rel="stylesheet" type="text/css" href="./static/css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" href="./static/css/font-awesome.min.css" />
+<link rel="stylesheet" type="text/css" href="./static/css/lo.css" />
+<script src="./static/js/vue.js"></script>
+<script src="./static/js/jquery.min.js"></script>
+<script src="./static/js/common.js"></script>
+</head>
+<body>
+<div id="app">
+	<div class="container met-head">
+	
+				<div class="row">
+					<div class="col-xs-6 col-sm-6 logo">
+		<ul class="list-none">
+			<li><a href="" class="met-logo"><img src="./static/image/1506052119.png" /></a></li>
+	
+			<li>会员登录</li>
+	
+		</ul>
+					</div>
+	
+					<div class="col-xs-6 col-sm-6 user-info">
+						<ol class="breadcrumb pull-right">
+	
+						  <li><a href="index.html" title="返回首页">返回首页</a></li>
+						</ol>
+					</div>
+				</div>
+	
+	</div>
+	
+	<div class="login_index met-member">
+		<div class="container">
+			<form id="form" @submit="checkForm" action="" method="post">
+				<div class="form-group">
+					<input type="text" name="username" required class="form-control" placeholder="用户名/邮箱/手机" v-model="username"
+					data-bv-notempty="true"
+					data-bv-notempty-message="此项不能为空"
+					>
+				</div>
+				<div class="form-group">
+					<input type="password" name="password" required class="form-control" placeholder="密码" v-model="password"
+					data-bv-notempty="true"
+					data-bv-notempty-message="此项不能为空"
+					>
+				</div>
+				
+				<button class="btn btn-lg btn-primary btn-block" >登录</button>
+	
+	
+				<a class="btn btn-lg btn-info btn-block" href="./register.html">没有账号？现在去注册</a>
+				
+			</form>
+		</div>
+	</div>
+	
+	<footer class="container met-footer">
+	</footer>
+</div>
+<script>
+	new Vue({
+		el: '#app',
+		data: function () {
+			return {
+				username:'',
+				password:''
+			}
+		},
+		mounted() {
+		
+		},
+		methods: {
+			checkForm: function (e) {
+				e.preventDefault();
+				var data = {}
+				requestPam('user/login?userName='+this.username+ '&passWord=' + this.password,'post',data,(res)=>{
+					localStorage.setItem('username',this.username)
+					localStorage.setItem('userId',res.result.userId)
+					alert('登录成功，返回首页')
+					location.href='index.html'
+				})
+			},
+		}
+	})
+</script>
+</body>
+</html>

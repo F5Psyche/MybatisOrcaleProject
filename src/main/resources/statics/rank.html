@@ -1,0 +1,137 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>title</title>
+    <meta name="renderer" content="webkit">
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="applicable-device" content="pc,mobile">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+    <meta name="description" content=""/>
+    <meta name="keywords">
+    <link rel='stylesheet' href='./static/css/style.css'>
+      <script src="./static/js/jquery.min.js"></script>
+    <script src="./static/js/shop_lang_cn.js"></script>
+    <script src="./static/js/style.js"></script>
+    <script src="./static/js/vue.js"></script>
+    <script src="./static/js/common.js"></script>
+    <style>
+        .logout{
+            display: none;
+            width: 80px;
+            text-align: center;
+            border: 1px solid #dddddd;
+            position: absolute;
+            left: 10px;
+            bottom: -60px;
+            cursor: pointer;
+            background-color: #ffffff;
+        }
+        .logout:before{
+            position:absolute;
+            width: 0;
+            height: 0;
+            left: 30px;
+            top: -9px;
+            border-width: 0 8px 8px;
+            border-style: solid;
+            border-color: transparent transparent #dddddd;
+            content: "";
+        }
+        .logout:after{
+            position: absolute;
+            left: 30px;
+            top: -16px;
+            width: 0;
+            height: 0;
+            border: 8px solid;
+            border-color: transparent transparent #ffffff;
+            content: '';
+        }
+        .logout p{
+            height: 35px;
+            line-height: 35px;
+            border-bottom: 1px solid #dddddd;
+            margin: 0 ;
+            box-sizing: border-box;
+            padding-bottom: 10px;
+        }
+        .logout p:last-child{
+            border-bottom: none;
+        }
+        .username{
+            position: relative;
+        }
+        .username:hover .logout,.username:focus .logout{
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+<div id="app">
+  <div class="load-box"></div>
+    <header>
+        <div class="head-box">
+            <div class="width-box">
+                <div class="logo-box">
+                    <img src="./static/image/1506052119.png">
+                    <h2>答题排名</h2>
+                </div>
+            </div>
+        </div>
+    </header>
+    <section class="main">
+        <div class="width-box">
+            <div class="main-right" style="width: 100%">
+                <div class="met-shownews-footer">
+                    <ul class="pager pager-round">
+                        <li class="previous " style="width: 100%">
+                            <a href="index.html">
+                                返回列表
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="card-hots">
+                    <h4>排行榜</h4>
+                    <ul>
+                        <li v-for="item in rankList"><a href="#" title="张三" target='_self'>{{item.username === username ? '我' : item.username}} <span style="float: right">累计正确答题数：{{item.totalCorrect}}</span></a></li>
+                    </ul>
+                </div>
+            
+            </div>
+        
+        </div>
+    </section>
+</div>
+<script>
+    new Vue({
+        el: '#app',
+        data: function () {
+            return {
+              list:[],
+                isLogin:false,
+                username:'',
+                rankList:[]
+            }
+        },
+        mounted() {
+            this.getRankList()
+            this.username = localStorage.getItem('username')
+        },
+        methods: {
+            getRankList(){
+                let data = {
+                    pageNum:1,
+                    pageSize:10,
+                }
+                request('user/userRanking', 'post', data, (res) => {
+                    this.rankList = res.result.list
+                })
+            }
+        }
+    })
+</script>
+</body>
+</html>

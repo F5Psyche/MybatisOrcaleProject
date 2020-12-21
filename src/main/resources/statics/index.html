@@ -1,0 +1,238 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>title</title>
+    <meta name="renderer" content="webkit">
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="applicable-device" content="pc,mobile">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+    <meta name="description" content=""/>
+    <meta name="keywords">
+    <link rel='stylesheet' href='./static/css/style.css'>
+      <script src="./static/js/jquery.min.js"></script>
+    <script src="./static/js/shop_lang_cn.js"></script>
+    <script src="./static/js/style.js"></script>
+    <script src="./static/js/vue.js"></script>
+    <script src="./static/js/common.js"></script>
+    <style>
+        .logout{
+            display: none;
+            width: 80px;
+            text-align: center;
+            border: 1px solid #dddddd;
+            position: absolute;
+            left: 10px;
+            bottom: -60px;
+            cursor: pointer;
+            background-color: #ffffff;
+            z-index: 9999;
+        }
+        .logout:before{
+            position:absolute;
+            width: 0;
+            height: 0;
+            left: 30px;
+            top: -9px;
+            border-width: 0 8px 8px;
+            border-style: solid;
+            border-color: transparent transparent #dddddd;
+            content: "";
+        }
+        .logout:after{
+            position: absolute;
+            left: 30px;
+            top: -16px;
+            width: 0;
+            height: 0;
+            border: 8px solid;
+            border-color: transparent transparent #ffffff;
+            content: '';
+        }
+        .logout p{
+            height: 35px;
+            line-height: 35px;
+            border-bottom: 1px solid #dddddd;
+            margin: 0 ;
+            box-sizing: border-box;
+            padding-bottom: 10px;
+        }
+        .logout p:hover{
+            color: #1a8fe4;
+        }
+        .logout p:last-child{
+            border-bottom: none;
+        }
+        .username{
+            position: relative;
+        }
+        .username:hover .logout,.username:focus .logout{
+            display: block;
+        }
+        
+        .new-item-badge {
+            position: absolute;
+            background: #92b7bd;
+            z-index: 999;
+            color: #fff;
+            font-size: 70%;
+            padding: 10px 30px;
+            top: 3px;
+            right: -27px;
+            line-height: 1.4;
+            -ms-transform: rotate(45deg);
+            -webkit-transform: rotate(45deg);
+            transform: rotate(45deg);
+        }
+        .card-list {
+            position: relative;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+
+<div id="app">
+  <div class="load-box"></div>
+    <header>
+        <div class="head-box">
+            <div class="width-box">
+                <div class="logo-box">
+                    <img src="./static/image/1506052119.png">
+                    <h2>试卷列表</h2>
+                </div>
+                
+                <div class="login-box" v-if="!isLogin">
+                    <a href="login.html">登录</a>
+                    <a href="register.html">注册</a>
+                </div>
+                
+                <div class="login-box username" v-if="isLogin">
+                    欢迎您，{{username}}
+                    <div class="logout" >
+                        <p @click="gotoPage('rank.html')">排行榜</p>
+                        <p @click="logout">退出登录</p>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </header>
+    <section class="main">
+        <div class="width-box">
+            <div class="main-left" style="width: 100%">
+                <div v-for="item in list" class="card-list" >
+                    <div class="new-item-badge" v-if="item.isDone">已答题</div>
+                    <div class="card-li" @click="gotoPage('gonglueinfo.html?id='+item.id)" style="cursor: pointer">
+                        <div class="card-description">
+                            <a class="card-title">
+                                <h3>{{item.author}} - {{item.year}}</h3>
+                            </a>
+                            <p> {{item.tag}}</p>
+                        </div>
+                        <div class="card-operation">
+                            <div class="card-author">
+                                <img src="./static/image/user.jpg">
+                                <font>{{item.author}}</font>
+                            </div>
+                            <div class="card-time">发布于 {{item.year}}</div>
+                        </div>
+                    </div>
+                    
+                </div>
+                
+            </div>
+<!--            <div class="main-right">-->
+<!--                -->
+<!--                <div class="editor-button">-->
+<!--                    <a href="" title="报名咨询" target='_self'>-->
+<!--                        答题排名-->
+<!--                    </a>-->
+<!--                </div>-->
+<!--                -->
+<!--                <div class="card-hots">-->
+<!--                    <h4>排行榜</h4>-->
+<!--                    <ul>-->
+<!--                        <li v-for="item in rankList"><a href="#" title="张三" target='_self'>{{item.username === username ? '我' : item.username}} <span style="float: right">累计答题：{{item.totalCorrect}}</span></a></li>-->
+<!--                    </ul>-->
+<!--                </div>-->
+<!--            -->
+<!--            </div>-->
+        
+        </div>
+    </section>
+</div>
+<script>
+    new Vue({
+        el: '#app',
+        data: function () {
+            return {
+              list:[],
+                isLogin:false,
+                username:'',
+                rankList:[],
+                examResults:[]
+            }
+        },
+        mounted() {
+            if(localStorage.getItem('username')){
+                this.isLogin = true;
+                this.username = localStorage.getItem('username')
+                this.getUserInfo()
+            }else {
+                this.getList()
+            }
+        },
+        methods: {
+            getList: function () {
+                let data = {
+                  pageNum:1,
+                  pageSize:100,
+                }
+                request('exam/list', 'post', data, (res) => {
+                    this.examResults.forEach(examItem=>{
+                        res.result.list.forEach(item=>{
+                            if(item.id===examItem.examId){
+                                item.isDone = true
+                            }
+                        })
+                    })
+                  this.list= res.result.list
+                    console.log(this.list)
+                })
+            },
+            logout(){
+                localStorage.removeItem('username')
+                localStorage.removeItem('userId')
+                this.isLogin = false
+            },
+            gotoPage(page){
+                if(!this.isLogin){
+                    alert('请先登录，即将跳转至登录页')
+                    location.href='login.html'
+                }else {
+                    location.href=page
+                }
+            },
+            getRankList(){
+                let data = {
+                    pageNum:1,
+                    pageSize:10,
+                }
+                request('user/userRanking', 'post', data, (res) => {
+                    this.rankList = res.result.list
+                })
+            },
+            getUserInfo(){
+                let data = {
+                }
+                requestPam('user/detail?userId='+localStorage.getItem('userId'), 'post', data, (res) => {
+                    this.examResults = res.result.examResults
+                    this.getList()
+                })
+            }
+        }
+    })
+</script>
+</body>
+</html>

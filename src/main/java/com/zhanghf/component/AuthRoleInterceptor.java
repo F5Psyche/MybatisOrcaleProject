@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.zhanghf.annotation.RoleNum;
 import com.zhanghf.vo.ResultVo;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
@@ -21,7 +22,7 @@ import java.util.UUID;
  * @date 16:33 2020/4/15
  */
 @Slf4j
-@Service
+@Component
 public class AuthRoleInterceptor extends HandlerInterceptorAdapter {
 
     @Override
@@ -30,6 +31,7 @@ public class AuthRoleInterceptor extends HandlerInterceptorAdapter {
         ResultVo resultVo = new ResultVo();
         response.setCharacterEncoding("UTF-8");
         response.setContentType("text/html;charset=utf-8");
+        log.info("AuthRoleInterceptor");
         if (handler instanceof HandlerMethod) {
             HandlerMethod handlerMethod = (HandlerMethod) handler;
             RoleNum roleNum = handlerMethod.getMethodAnnotation(RoleNum.class);
@@ -41,6 +43,5 @@ public class AuthRoleInterceptor extends HandlerInterceptorAdapter {
         response.getWriter().append(JSON.toJSONString(resultVo));
         return false;
     }
-
 
 }
