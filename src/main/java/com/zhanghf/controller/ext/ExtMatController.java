@@ -28,7 +28,7 @@ import java.util.UUID;
  */
 @Slf4j
 @RestController
-@RequestMapping("")
+@RequestMapping("ext")
 @Api(tags = "外部事项")
 public class ExtMatController {
 

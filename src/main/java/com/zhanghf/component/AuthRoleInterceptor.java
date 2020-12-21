@@ -5,13 +5,12 @@ import com.zhanghf.annotation.RoleNum;
 import com.zhanghf.vo.ResultVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.sql.SQLException;
+import java.lang.reflect.Method;
 import java.util.UUID;
 
 /**
@@ -31,12 +30,13 @@ public class AuthRoleInterceptor extends HandlerInterceptorAdapter {
         ResultVo resultVo = new ResultVo();
         response.setCharacterEncoding("UTF-8");
         response.setContentType("text/html;charset=utf-8");
-        log.info("AuthRoleInterceptor");
         if (handler instanceof HandlerMethod) {
             HandlerMethod handlerMethod = (HandlerMethod) handler;
+            Method method = handlerMethod.getMethod();
             RoleNum roleNum = handlerMethod.getMethodAnnotation(RoleNum.class);
-            log.info("uuid={}, roleNum={}", uuid, roleNum);
-            if (roleNum == null) {
+            log.info("uuid={}, roleNum={}, method={}, methodName={}", uuid, roleNum, method, method.getName());
+            log.info("url={}, uri={}, path={}, flag={}", request.getRequestURL(), request.getRequestURI(), request.getServletPath(), !"/error".equals(request.getServletPath()));
+            if (!"/error".equals(request.getServletPath()) && roleNum == null) {
                 return true;
             }
         }
