@@ -33,9 +33,4 @@ public class LoginInfoVO implements Serializable {
 
     @ApiModelProperty("角色类型")
     private String roleType;
-
-
-    private String userExpPol;
-
-    private String  cipExpPol;
 }
