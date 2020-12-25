@@ -4,7 +4,7 @@ import com.zhanghf.mapper.ImageInfoMapper;
 import com.zhanghf.po.ImageInfo;
 import com.zhanghf.po.OrganInfo;
 import com.zhanghf.util.ImageUtils;
-import com.zhanghf.vo.ResultVo;
+import com.zhanghf.vo.ResultVO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -26,8 +26,8 @@ public class ImageInfoService {
     @Resource
     ImageInfoMapper imageInfoMapper;
 
-    public ResultVo<List<String>> imageGenerate(String uuid, String imageUuid) {
-        ResultVo<List<String>> resultVo = new ResultVo<>(uuid);
+    public ResultVO<List<String>> imageGenerate(String uuid, String imageUuid) {
+        ResultVO<List<String>> resultVo = new ResultVO<>(uuid);
         List<ImageInfo> imageInfos = imageInfoMapper.select(new ImageInfo(imageUuid));
         List<String> list = new ArrayList<>();
         for (ImageInfo imageInfo : imageInfos) {

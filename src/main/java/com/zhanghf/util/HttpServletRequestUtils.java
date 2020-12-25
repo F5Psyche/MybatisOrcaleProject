@@ -4,6 +4,9 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
@@ -11,6 +14,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
+import java.util.Objects;
 
 /**
  * @author zhanghf
@@ -19,11 +23,6 @@ import java.util.Enumeration;
  */
 @Slf4j
 public class HttpServletRequestUtils {
-
-
-//    private HttpServletRequestUtils() {
-//        throw new IllegalStateException("HttpServletRequestUtils");
-//    }
 
     /**
      * 获取参数
@@ -60,6 +59,17 @@ public class HttpServletRequestUtils {
             log.error("uuid={}, flag={}, errMsg={}", uuid, StringUtils.isEmpty(buffer.toString()), e.toString());
         }
         return result;
+    }
+
+    /**
+     * 获取HttpServletRequest请求
+     *
+     * @return HttpServletRequest
+     */
+    public static HttpServletRequest getHttpServletRequest() {
+        RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
+        ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) Objects.requireNonNull(requestAttributes);
+        return servletRequestAttributes.getRequest();
     }
 
 

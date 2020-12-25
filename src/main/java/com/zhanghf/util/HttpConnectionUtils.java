@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.zhanghf.dto.CommonDTO;
-import com.zhanghf.vo.ResultVo;
+import com.zhanghf.vo.ResultVO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
@@ -48,7 +48,7 @@ public class HttpConnectionUtils {
      * @return 返回参数
      */
     public static Object httpConnectionPost(String uuid, String uri, JSONObject json) {
-        ResultVo<String> resultVo = new ResultVo<>();
+        ResultVO<String> resultVo = new ResultVO<>();
         int status = 0;
         String message = "";
         try {

@@ -4,7 +4,7 @@ import com.zhanghf.dto.CommonDTO;
 import com.zhanghf.modues.ImageInfoService;
 import com.zhanghf.po.OrganInfo;
 import com.zhanghf.util.CommonUtils;
-import com.zhanghf.vo.ResultVo;
+import com.zhanghf.vo.ResultVO;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
@@ -34,7 +34,7 @@ public class ImageController {
     ImageInfoService imageInfoService;
 
     @PostMapping("/image/generate")
-    public ResultVo<List<String>> imageGenerate(@RequestParam(value = "imageUuid", required = false) String imageUuid) {
+    public ResultVO<List<String>> imageGenerate(@RequestParam(value = "imageUuid", required = false) String imageUuid) {
         String uuid = UUID.randomUUID().toString();
         return imageInfoService.imageGenerate(uuid, imageUuid);
     }

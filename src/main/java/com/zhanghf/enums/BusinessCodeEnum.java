@@ -1,6 +1,6 @@
 package com.zhanghf.enums;
 
-import com.zhanghf.vo.ResultVo;
+import com.zhanghf.vo.ResultVO;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 
@@ -50,8 +50,8 @@ public enum BusinessCodeEnum {
         this.data = data;
     }
 
-    public static <T> ResultVo<T> getMsgCode(String uuid, String data) {
-        ResultVo<T> resultVo = new ResultVo<>(UNKNOWN_ERROR.getMsg(), UNKNOWN_ERROR.getCode(), uuid);
+    public static <T> ResultVO<T> getMsgCode(String uuid, String data) {
+        ResultVO<T> resultVo = new ResultVO<>(UNKNOWN_ERROR.getMsg(), UNKNOWN_ERROR.getCode(), uuid);
         if (data != null && data.length() > 0) {
             for (BusinessCodeEnum type : BusinessCodeEnum.values()) {
                 if (StringUtils.isNotBlank(type.getData()) && data.contains(type.getData())) {

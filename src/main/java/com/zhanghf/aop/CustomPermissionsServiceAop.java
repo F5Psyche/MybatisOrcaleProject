@@ -3,9 +3,8 @@ package com.zhanghf.aop;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.zhanghf.annotation.CustomPermissionsService;
-import com.zhanghf.enums.BusinessCodeEnum;
+import com.zhanghf.dto.CommonDTO;
 import com.zhanghf.util.HttpServletRequestUtils;
-import com.zhanghf.vo.ResultVo;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
@@ -52,7 +51,6 @@ public class CustomPermissionsServiceAop {
         //获取方法的入参
         Object[] objects = jointPoint.getArgs();
         String uuid = objects[0].toString();
-        ResultVo resultVo = new ResultVo(uuid);
         try {
             JSONArray array = JSON.parseArray(JSON.toJSONString(objects));
             log.info("array={}", array);
@@ -83,10 +81,8 @@ public class CustomPermissionsServiceAop {
             }
             return jointPoint.proceed();
         } catch (Throwable throwable) {
-            resultVo.setCode(BusinessCodeEnum.UNKNOWN_ERROR.getCode());
-            resultVo.setResultDes(BusinessCodeEnum.UNKNOWN_ERROR.getMsg());
-            log.error("uuid={}, errMsg={}", uuid, throwable.getMessage());
+            log.error(CommonDTO.COMMON_LOGGER_ERROR_INFO_PARAM, uuid, throwable.getMessage());
+            throw new ClassCastException("自定义注解异常");
         }
-        return resultVo;
     }
 }

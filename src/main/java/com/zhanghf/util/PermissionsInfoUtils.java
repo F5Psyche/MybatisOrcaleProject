@@ -1,6 +1,6 @@
 package com.zhanghf.util;
 
-import com.zhanghf.vo.ResultVo;
+import com.zhanghf.vo.ResultVO;
 import lombok.extern.slf4j.Slf4j;
 import org.reflections.Reflections;
 import org.springframework.stereotype.Component;
@@ -22,8 +22,8 @@ public class PermissionsInfoUtils {
      * @param prefix 扫描路径
      * @return
      */
-    public static ResultVo getPermissionsInfo(String uuid, String prefix) {
-        ResultVo resultVo = new ResultVo(uuid);
+    public static ResultVO getPermissionsInfo(String uuid, String prefix) {
+        ResultVO resultVo = new ResultVO(uuid);
 
         //扫描com.zhanghf.component.Scheduler,扫描路径不可忘记,不然会扫描全部项目包,包括引用的jar
         Reflections reflections = new Reflections(prefix);
