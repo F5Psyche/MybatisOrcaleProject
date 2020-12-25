@@ -2,7 +2,7 @@ package com.zhanghf.util;
 
 import com.zhanghf.dto.CommonDTO;
 import com.zhanghf.enums.BusinessCodeEnum;
-import com.zhanghf.vo.ResultVO;
+import com.zhanghf.vo.ResultVo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.util.StringUtils;
@@ -52,8 +52,8 @@ public class CommonUtils {
      * @param fileName 文件名
      * @return 结果
      */
-    public static ResultVO<String> writeFile(String uuid, String content, String fileName) {
-        ResultVO<String> resultVo = new ResultVO<>();
+    public static ResultVo<String> writeFile(String uuid, String content, String fileName) {
+        ResultVo<String> resultVo = new ResultVo<>();
         String pathName = "\\BlockChain\\" + fileName;
         File file = new File(pathName);
         if (!file.getParentFile().exists()) {
@@ -82,8 +82,8 @@ public class CommonUtils {
      * @param fileName 文件名
      * @return 结果
      */
-    public static ResultVO<String> readFile(String uuid, String fileName) {
-        ResultVO<String> resultVo = new ResultVO<>();
+    public static ResultVo<String> readFile(String uuid, String fileName) {
+        ResultVo<String> resultVo = new ResultVo<>();
         String pathName = "\\BlockChain\\" + fileName;
         File file = new File(pathName);
         try {
@@ -105,10 +105,10 @@ public class CommonUtils {
     /**
      * @param uuid        唯一识别码
      * @param inputStream InputStream
-     * @return ResultVO
+     * @return ResultVo
      */
-    public static ResultVO<String> inputStreamToString(String uuid, InputStream inputStream) {
-        ResultVO<String> resultVo = new ResultVO<>();
+    public static ResultVo<String> inputStreamToString(String uuid, InputStream inputStream) {
+        ResultVo<String> resultVo = new ResultVo<>();
         StringBuilder buffer = new StringBuilder();
         try (
                 InputStreamReader inputStreamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
@@ -166,7 +166,7 @@ public class CommonUtils {
      * @param <T>  泛型
      * @return 封装结果
      */
-    public static <T> ResultVO<T> getExceptionResult(String uuid, Exception e) {
+    public static <T> ResultVo<T> getExceptionResult(String uuid, Exception e) {
         String errMsg = getStackTraceString(e);
         log.error(CommonDTO.COMMON_LOGGER_ERROR_INFO_PARAM, uuid, errMsg);
         return BusinessCodeEnum.getMsgCode(uuid, errMsg);

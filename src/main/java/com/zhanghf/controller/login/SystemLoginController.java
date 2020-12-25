@@ -5,7 +5,7 @@ import com.zhanghf.modues.login.SystemLoginService;
 import com.zhanghf.po.login.UserInfo;
 import com.zhanghf.util.CommonUtils;
 import com.zhanghf.util.EncryptUtils;
-import com.zhanghf.vo.ResultVO;
+import com.zhanghf.vo.ResultVo;
 import com.zhanghf.vo.login.LoginInfoVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,9 +30,9 @@ public class SystemLoginController {
     SystemLoginService systemLoginService;
 
     @RequestMapping("login")
-    public ResultVO<String> userLogin(@RequestBody LoginInfoVO info) {
+    public ResultVo<String> userLogin(@RequestBody LoginInfoVO info) {
         String uuid = UUID.randomUUID().toString();
-        ResultVO<String> resultVo = new ResultVO<>(uuid);
+        ResultVo<String> resultVo = new ResultVo<>(uuid);
         try {
             long currentTime = System.currentTimeMillis();
             String ssoToken = EncryptUtils.md5(JSON.toJSONString(info));
@@ -43,9 +43,9 @@ public class SystemLoginController {
         return resultVo;
     }
 
-    public ResultVO<Map<String, Object>> userRegister(@RequestBody UserInfo info) {
+    public ResultVo<Map<String, Object>> userRegister(@RequestBody UserInfo info) {
         String uuid = UUID.randomUUID().toString();
-        ResultVO<Map<String, Object>> resultVo = new ResultVO<>(uuid);
+        ResultVo<Map<String, Object>> resultVo = new ResultVo<>(uuid);
 
 
         return resultVo;

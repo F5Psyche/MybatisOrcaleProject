@@ -3,7 +3,7 @@ package com.zhanghf.util;
 import com.alibaba.fastjson.JSON;
 import com.zhanghf.dto.CommonDTO;
 import com.zhanghf.enums.BusinessCodeEnum;
-import com.zhanghf.vo.ResultVO;
+import com.zhanghf.vo.ResultVo;
 import com.zhanghf.vo.excel.ExportExcelVO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.hssf.usermodel.*;
@@ -34,8 +34,8 @@ public class ExportExcelUtils {
      * @param vos      标题
      * @param data     导出内容
      */
-    public static ResultVO<List<Map<String, String>>> exportExcelCommon(String uuid, HttpServletResponse response, List<ExportExcelVO> vos, List<Map<String, String>> data) {
-        ResultVO<List<Map<String, String>>> resultVo = new ResultVO<>(uuid);
+    public static ResultVo<List<Map<String, String>>> exportExcelCommon(String uuid, HttpServletResponse response, List<ExportExcelVO> vos, List<Map<String, String>> data) {
+        ResultVo<List<Map<String, String>>> resultVo = new ResultVo<>(uuid);
         log.info("uuid={}, vos={}, data={}", uuid, vos, data);
         String fileName = uuid + ".xls";
         try (

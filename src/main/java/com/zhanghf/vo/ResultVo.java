@@ -13,7 +13,7 @@ import java.io.Serializable;
  */
 @Data
 @NoArgsConstructor
-public class ResultVO<T> implements Serializable {
+public class ResultVo<T> implements Serializable {
 
     @ApiModelProperty("返回结果")
     private T result;
@@ -30,11 +30,11 @@ public class ResultVO<T> implements Serializable {
     @ApiModelProperty("请求ID")
     private String requestId;
 
-    public ResultVO(String requestId) {
+    public ResultVo(String requestId) {
         this.requestId = requestId;
     }
 
-    public ResultVO(String code, String resultDes, String requestId) {
+    public ResultVo(String code, String resultDes, String requestId) {
         this.code = code;
         this.resultDes = resultDes;
         this.requestId = requestId;

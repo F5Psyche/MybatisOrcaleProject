@@ -6,7 +6,7 @@ import com.zhanghf.enums.RoleEnum;
 import com.zhanghf.mapper.OrganInfoMapper;
 import com.zhanghf.po.ImageInfo;
 import com.zhanghf.po.OrganInfo;
-import com.zhanghf.vo.ResultVO;
+import com.zhanghf.vo.ResultVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -43,8 +43,8 @@ public class ExtMatService {
     }
 
     @CustomPermissionsService(role = RoleEnum.ADMIN)
-    public ResultVO<List<OrganInfo>> organInfoList(String uuid, ImageInfo imageInfo) {
-        ResultVO<List<OrganInfo>> resultVo = new ResultVO<>(uuid);
+    public ResultVo<List<OrganInfo>> organInfoList(String uuid, ImageInfo imageInfo) {
+        ResultVo<List<OrganInfo>> resultVo = new ResultVo<>(uuid);
         List<OrganInfo> list = organInfoMapper.organInfoList(new OrganInfo());
         if (CollectionUtils.isEmpty(list)) {
             log.info("uuid={}, list={}", uuid, list);

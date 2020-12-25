@@ -10,7 +10,7 @@ import com.zhanghf.modues.login.SystemLoginService;
 import com.zhanghf.po.ImageInfo;
 import com.zhanghf.po.OrganInfo;
 import com.zhanghf.util.HttpServletRequestUtils;
-import com.zhanghf.vo.ResultVO;
+import com.zhanghf.vo.ResultVo;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,8 +40,8 @@ public class ExtMatController {
 
     @RequestMapping("/organ")
     @RoleNum(role = RoleEnum.ADMIN)
-    public ResultVO organInfoList(HttpServletRequest request) {
-        ResultVO resultVo = new ResultVO();
+    public ResultVo organInfoList(HttpServletRequest request) {
+        ResultVo resultVo = new ResultVo();
         String uuid = UUID.randomUUID().toString();
         JSONObject params = HttpServletRequestUtils.getParameter(uuid, request);
         log.info("uuid={}, params={}, header={}", uuid, params, request.getHeader("ssToken"));
@@ -55,11 +55,11 @@ public class ExtMatController {
 
     @RequestMapping("/ext/matter")
     @CustomPermissionsController(role = RoleEnum.ADMIN)
-    public ResultVO extMatInfoSave(HttpServletRequest request) {
+    public ResultVo extMatInfoSave(HttpServletRequest request) {
         String uuid = UUID.randomUUID().toString();
-        ResultVO resultVo = new ResultVO(uuid);
+        ResultVo resultVo = new ResultVo(uuid);
         try {
-            ResultVO<List<OrganInfo>> organInfoResult = extMatService.organInfoList(uuid, new ImageInfo("imageSan"));
+            ResultVo<List<OrganInfo>> organInfoResult = extMatService.organInfoList(uuid, new ImageInfo("imageSan"));
             if (organInfoResult.isSuccess()) {
                 List<OrganInfo> list = organInfoResult.getResult();
                 for (OrganInfo organInfo : list) {
@@ -77,9 +77,9 @@ public class ExtMatController {
     }
 
 //    @RequestMapping("/matterDetail/query")
-//    public ResultVO matterDetailQuery(@RequestParam(value = "localInnerCode", required = false) String localInnerCode) {
+//    public ResultVo matterDetailQuery(@RequestParam(value = "localInnerCode", required = false) String localInnerCode) {
 //        String uuid = UUID.randomUUID().toString();
-//        ResultVO resultVo = new ResultVO();
+//        ResultVo resultVo = new ResultVo();
 //        try {
 //            if (StringUtils.isEmpty(localInnerCode)) {
 //                List<ExtMatTab> list = extMatService.extMatAll(uuid);

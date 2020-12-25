@@ -4,7 +4,7 @@ import com.zhanghf.dto.CommonDTO;
 import com.zhanghf.enums.BusinessCodeEnum;
 import com.zhanghf.util.CommonUtils;
 import com.zhanghf.util.HttpServletRequestUtils;
-import com.zhanghf.vo.ResultVO;
+import com.zhanghf.vo.ResultVo;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -34,7 +34,7 @@ public class CustomPermissionsControllerAop {
     @Around("@annotation(com.zhanghf.annotation.CustomPermissionsController)")
     public Object customPermissionsControllerAround(ProceedingJoinPoint jointPoint) {
         String uuid = UUID.randomUUID().toString();
-        ResultVO<Map<String, Object>> resultVo = new ResultVO<>(uuid);
+        ResultVo<Map<String, Object>> resultVo = new ResultVo<>(uuid);
         HttpServletRequest request = HttpServletRequestUtils.getHttpServletRequest();
         String ssoToken = request.getHeader("ssoToken");
         try {
